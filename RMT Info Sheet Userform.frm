@@ -3,9 +3,9 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} RMTSheet
    Caption         =   "Official RMT WebSheet"
    ClientHeight    =   10875
    ClientLeft      =   120
-   ClientTop       =   450
-   ClientWidth     =   9960
-   OleObjectBlob   =   "RMTSheet.frx":0000
+   ClientTop       =   460
+   ClientWidth     =   9960.001
+   OleObjectBlob   =   "RMT Info Sheet Userform.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
 Attribute VB_Name = "RMTSheet"
@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 
 Private Sub cancel_Click()
 
@@ -39,9 +40,9 @@ ServiceP = service_performed.Value
 Additional = additional_info.Value
 Date_Requested = mm.Value & "/" & dd.Value & "/" & yyyy.Value
 
-Call Create_Solution_Log
-
 Unload Me
+
+Call Create_Solution_Log
 
 End Sub
 

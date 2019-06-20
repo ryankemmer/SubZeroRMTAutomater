@@ -5,7 +5,7 @@ Attribute VB_Name = "Unit_Arrival"
 'Purpose: Subs dedicated to automating the unit arrival process. Subs will update the tracking list, update the RMT sheet document, and update folder locations. \
 'The subs also allow for the user to send an arrival email.
 'Author: Ryan Kemmer
-'Last Updated: 10/30/2018
+'Last Updated: 5/15/2019
 '*****************************************************
 
 Public serial_arrival As String
@@ -33,8 +33,10 @@ Dim Lrow As Long
 Dim row As Long
 Dim Description_arrival As String
 
+Update = True
+
 'Activate Sheet
-Workbooks("Solution Log - Template.xlsm").Activate
+Workbooks("Unit Tracking List - Lab Layout .xlsm").Activate
 Worksheets("Unit List").Activate
 
 'Find Serial in unit list
@@ -122,7 +124,7 @@ sDestFolder = Solution_Logs_Folder & "\" & Location_Folder_String & "\" & Folder
 FSO.MoveFolder sFolder, sDestFolder
     
 'Re Activate Tracking list
-Workbooks("Solution Log - Template.xlsm").Activate
+Workbooks("Unit Tracking List - Lab Layout .xlsm").Activate
 Worksheets("Unit List").Activate
 
 'recreate hyperlink
@@ -131,6 +133,18 @@ tracklist.DataBodyRange.Cells(row, 13).Select
 ws.Hyperlinks.Add Anchor:=Selection, _
         Address:=sDestFolder & "\" & FileName, _
         TextToDisplay:="Link"
+        
+        
+'prompt for email
+
+Answer = MsgBox("Would you like to send out RMT arrival email?", vbYesNo + vbQuestion, "cancel")
+    If Answer = vbYes Then
+        Call Send_Arrival_Email
+    Else
+        cancel = True
+    End If
+    
+Exit Sub
         
 'Error Cases
 Done:
@@ -180,7 +194,7 @@ Set OutApp = CreateObject("Outlook.Application")
 Set Outmail = OutApp.CreateItem(0)
 
 hbody = "<BODY style=font-size:11pt;font-family:Calibri>Hi All, <br><br>" & _
-        "Goodyear Reliability has recieved the following units: <br><br>" & _
+        "Goodyear Reliability has received the following units: <br><br>" & _
         Model_arrival & " (" & serial_arrival & ") <br><br>" & _
         "Best,</BODY>"
 

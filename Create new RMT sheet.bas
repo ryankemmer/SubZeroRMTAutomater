@@ -5,7 +5,7 @@ Attribute VB_Name = "CreateRMTSheet"
 'Purpose: Subs dedicated to creating a new RMT sheet. Subs will create a new sheet with populated information, and create a
 'folder dedicated to the RMT unit. The subs also will update the tracking list and tracking list.
 'Author: Ryan Kemmer
-'Last Updated: 10/30/2018
+'Last Updated: 5/15/2019
 '*****************************************************
 
 Public Model As String
@@ -17,6 +17,7 @@ Public Description As String
 Public ServiceP As String
 Public Additional As String
 Public Date_Requested As String
+Public Update As Boolean
 
 Sub Show_RMTSheet()
 
@@ -26,6 +27,7 @@ End Sub
 Sub Create_Solution_Log()
 
 Application.ScreenUpdating = False
+Update = True
 
 Dim Answer As Integer
 Dim tracklist As ListObject
@@ -66,8 +68,9 @@ End If
 
 'Copy workbook and save new workbook in pending arrival section
 Sheets("Solutions Log").Copy
-ActiveWorkbook.SaveAs FileName:="P:\Teamwork\Reliability\Reliability Files\Lab Units\Solution Logs\Pending Arrival\" & _
-FolderN & "\" & FileN, FileFormat:=xlOpenXMLWorkbook
+
+ActiveWorkbook.SaveAs FileName:="P:\Teamwork\Reliability\Reliability Files\Lab Units\Solution Logs\Pending Arrival\" & FolderN & "\" & FileN, FileFormat:=xlOpenXMLWorkbook
+
 
 'Prompt User to Update Tracking List
 Answer = MsgBox("Would you like to update the unit tracking list?", vbQuestion + vbYesNo)
@@ -75,20 +78,31 @@ Answer = MsgBox("Would you like to update the unit tracking list?", vbQuestion +
     
         'Close old workbook
         ActiveWorkbook.Close Savechanges:=True
-        Workbooks("Solution Log - Template.xlsm").Activate
+        Workbooks("Unit Tracking List - Lab Layout .xlsm").Activate
         
         'Update tracking list
         Call Update_Tracking_List
         Call Clear_Solutions_Log
+        Worksheets("Unit List").Activate
         
     Else
         cancel = True
         'Close New Workbook
         ActiveWorkbook.Close
-        Workbooks("Solution Log - Template.xlsm").Activate
+        Workbooks("Unit Tracking List - Lab Layout .xlsm").Activate
         Call Clear_Solutions_Log
-            
+        Worksheets("Unit List").Activate
+        
+        End If
+
+Printer = MsgBox("Would you like to print RMT sheet", vbQuestion + vbYesNo)
+    If Printer = vbYes Then
+        Call Print_RMTSheet
+    Else
+        End
     End If
+
+Update = False
 
 End Sub
 
@@ -151,10 +165,22 @@ ws.Hyperlinks.Add Anchor:=Selection, _
 ActiveWorkbook.Save
 
 End Sub
+Sub Print_RMTSheet()
+
+Workbooks.Open ("P:\Teamwork\Reliability\Reliability Files\Lab Units\Solution Logs\Pending Arrival\" & _
+Serial & " " & Model & " - " & Description & "\" & Serial & " " & Model & " - " & Description & ".xlsx")
+
+Worksheets("Solutions Log").PrintOut
+ActiveWorkbook.Close
+
+End Sub
 
 Sub Create_Folder(F As String)
 
-MkDir "P:\Teamwork\Reliability\Reliability Files\Lab Units\Solution Logs\Pending Arrival\" & F
+Dim FolderPath As String
+FolderPath = Trim("P:\Teamwork\Reliability\Reliability Files\Lab Units\Solution Logs\Pending Arrival\" & F)
+MkDir FolderPath
+
 
 End Sub
 

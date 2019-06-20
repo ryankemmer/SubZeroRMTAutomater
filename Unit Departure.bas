@@ -5,7 +5,7 @@ Attribute VB_Name = "Unit_Departure"
 'Purpose: Subs dedicated to automating the unit departure process. Subs will update the tracking list, update the RMT sheet document, and update folder locations.
 'The subs also allow for the user to send a departure email.
 'Author: Ryan Kemmer
-'Last Updated: 10/30/2018
+'Last Updated: 5/15/2019
 '*****************************************************
 
 Public Serial_Departure As String
@@ -21,6 +21,8 @@ UnitDeparture.Show
 End Sub
 
 Sub Unit_Departure_Unit_List()
+
+Update = True
 
 Dim tracklist As ListObject
 Dim ws As Worksheet
@@ -95,7 +97,7 @@ sDestFolder = Solution_Logs_Folder & "\Completed\Cummulative List of Reports\" &
 FSO.MoveFolder sFolder, sDestFolder
 
 'Re Activate Tracking list
-Workbooks("Solution Log - Template.xlsm").Activate
+Workbooks("Unit Tracking List - Lab Layout .xlsm").Activate
 Worksheets("Unit List").Activate
 
 'recreate hyperlink
@@ -107,8 +109,18 @@ ws.Hyperlinks.Add Anchor:=Selection, _
 'open workbook
 Workbooks.Open FileName:=sDestFolder & "\" & FileName
 
+'prompt to send email
+Answer = MsgBox("Would you like to send out RMT departure email?", vbYesNo + vbQuestion, "cancel")
+    If Answer = vbYes Then
+        Call Send_Departure_Email
+    Else
+        cancel = True
+    End If
+
 'Prompt to update log
 MsgBox "Please Update Solutions Log"
+
+Update = False
 
 End Sub
 

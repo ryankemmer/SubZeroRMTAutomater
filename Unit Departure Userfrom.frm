@@ -3,9 +3,9 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UnitDeparture
    Caption         =   "Unit Departure"
    ClientHeight    =   5145
    ClientLeft      =   120
-   ClientTop       =   450
-   ClientWidth     =   10545
-   OleObjectBlob   =   "UnitDeparture.frx":0000
+   ClientTop       =   460
+   ClientWidth     =   10540
+   OleObjectBlob   =   "Unit Departure Userfrom.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
 Attribute VB_Name = "UnitDeparture"
@@ -13,24 +13,16 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-Private Sub create_log_click()
 
-Dim Answer As Integer
+Private Sub create_log_click()
 
 Serial_Departure = serial_number_box.Value
 Date_Departure = mm.Value & "/" & dd.Value & "/" & yyyy.Value
 Root_Cause = root_cause_box.Value
 
-Call Unit_Departure_Unit_List
-
-Answer = MsgBox("Would you like to send out RMT departure email?" + vbYesNo + vbQuestion, "cancel")
-    If Answer = vbYes Then
-        Call Send_Departure_Email
-    Else
-        cancel = True
-    End If
-
 Unload Me
+
+Call Unit_Departure_Unit_List
 
 End Sub
 
